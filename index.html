@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sami Frota — Gestão de Frotas</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f5f5;color:#333}
+    .hero{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:60px 20px;text-align:center}
+    .hero h1{font-size:2.2em;margin-bottom:10px}
+    .hero p{font-size:1.1em;opacity:.9;max-width:600px;margin:0 auto}
+    .container{max-width:800px;margin:0 auto;padding:40px 20px}
+    .card{background:#fff;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .card h2{color:#1a73e8;margin-bottom:12px;font-size:1.3em}
+    .card p{line-height:1.6;color:#555;margin-bottom:8px}
+    .card ul{list-style:none;padding:0}
+    .card li{padding:8px 0;border-bottom:1px solid #eee;line-height:1.5}
+    .card li:last-child{border:none}
+    .tag{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:4px 10px;border-radius:20px;font-size:.85em;margin-right:6px;margin-bottom:6px}
+    .btn{display:inline-block;background:#1a73e8;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:1.1em;margin-top:16px}
+    .btn:hover{background:#1557b0}
+    .footer{text-align:center;padding:30px;color:#888;font-size:.9em}
+    code{background:#eee;padding:2px 6px;border-radius:4px;font-size:.9em}
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>🧾 Sami Frota</h1>
+    <p>Gestão de frotas direto pelo Telegram. Registre abastecimentos, manutenções e checklists com mensagens simples ou fotos de recibos.</p>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>🤖 Como usar</h2>
+      <p>Adicione <strong>@Sami_Frota_bot</strong> no Telegram e mande mensagens como:</p>
+      <ul>
+        <li><code>abasteci ABC1234 45L R$295 km50000</code></li>
+        <li><code>📷</code> — envie a foto do recibo que o bot extrai os dados</li>
+        <li><code>resumo do ABC1234</code> — consulta o veículo</li>
+        <li><code>checklist Centro ok</code> — registra vistoria da filial</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📋 Funcionalidades</h2>
+      <ul>
+        <li>📸 Leitura automática de recibos (OCR via IA)</li>
+        <li>⛽ Registro de abastecimentos com foto ou texto</li>
+        <li>🔧 Controle de manutenções (troca de óleo, pneus, revisões)</li>
+        <li>✅ Checklists de vistoria por filial</li>
+        <li>📊 Consulta de resumo por placa</li>
+        <li>👥 Qualquer motorista pode usar — sem cadastro</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>💰 Custo</h2>
+      <p><strong>Grátis para testar.</strong> O custo operacional é de centavos por mês — apenas o processamento das imagens de recibo.</p>
+    </div>
+
+    <div style="text-align:center;margin-top:30px">
+      <a class="btn" href="https://t.me/Sami_Frota_bot" target="_blank">📱 Abrir no Telegram</a>
+      <p style="margin-top:12px;color:#888">Ou busque por <strong>@Sami_Frota_bot</strong> no app</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Sami Frota &mdash; Projeto MVP</p>
+  </div>
+</body>
+</html>
