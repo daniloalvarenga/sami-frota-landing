@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0A2540" />
+  <meta name="description" content="Como conversar com o Bot da Frota Sami no Telegram — guia rápido e visual." />
+  <title>Como Conversar · Bot da Frota Sami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --primary: #0a2540;
+      --primary-2: #0f3460;
+      --accent: #00b894;
+      --accent-2: #00d4aa;
+      --accent-3: #0ea5e9;
+      --highlight: #ffb800;
+      --danger: #ff6b6b;
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --text: #0a2540;
+      --text-muted: #5a6b7b;
+      --text-light: #8696a7;
+      --border: rgba(10, 37, 64, 0.08);
+      --shadow-sm: 0 2px 8px rgba(10, 37, 64, 0.06);
+      --shadow-md: 0 12px 32px rgba(10, 37, 64, 0.1);
+      --shadow-lg: 0 24px 60px rgba(10, 37, 64, 0.16);
+      --radius: 18px;
+      --radius-lg: 28px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      position: relative;
+    }
+
+    /* ====== Layout 9:16 ====== */
+    .deck {
+      height: 100vh;
+      width: 100vw;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .deck::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      min-height: 100vh;
+      min-height: 100dvh;
+      width: 100vw;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 22px 96px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ====== Backgrounds ====== */
+    .slide-light {
+      background: var(--bg);
+    }
+    .slide-white {
+      background: var(--bg-card);
+    }
+    .slide-cover {
+      background: linear-gradient(165deg, #0a2540 0%, #103a66 45%, #0f6e7a 100%);
+      color: #fff;
+    }
+    .slide-cover::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(0, 212, 170, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(14, 165, 233, 0.32) 0%, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(255, 184, 0, 0.18) 0%, transparent 50%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        transform: translate(3%, -3%) scale(1.05);
+      }
+    }
+    .slide-telegram {
+      background: linear-gradient(160deg, #0a2540 0%, #103a66 60%, #0088cc 110%);
+      color: #fff;
+    }
+    .slide-accent {
+      background: linear-gradient(160deg, #ffffff 0%, #e6fff7 100%);
+    }
+    .slide-final {
+      background: linear-gradient(165deg, #0a2540 0%, #0f6e7a 100%);
+      color: #fff;
+    }
+    .slide-final::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.28) 0%, transparent 50%),
+        radial-gradient(circle at 80% 90%, rgba(14, 165, 233, 0.25) 0%, transparent 50%);
+    }
+
+    /* ====== Typography ====== */
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slide-cover .eyebrow,
+    .slide-telegram .eyebrow,
+    .slide-final .eyebrow {
+      color: var(--accent-2);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 8.5vw, 48px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: clamp(28px, 7vw, 38px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    h3 {
+      font-size: clamp(20px, 5vw, 24px);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .slide-cover p,
+    .slide-telegram p,
+    .slide-final p {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .lead {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* ====== Cover ====== */
+    .cover-emoji {
+      font-size: 76px;
+      line-height: 1;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floaty 4s ease-in-out infinite;
+      filter: drop-shadow(0 8px 24px rgba(0, 212, 170, 0.35));
+    }
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    .cover-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      width: fit-content;
+    }
+    .cover-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00d4aa;
+      box-shadow: 0 0 12px #00d4aa;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .scroll-hint::after {
+      content: "";
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+      animation: scrollLine 1.6s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ====== Cards ====== */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card-quiet {
+      box-shadow: none;
+    }
+
+    .code-block {
+      background: #0a2540;
+      color: #e3f9f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .code-block::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 26px;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .code-block::after {
+      content: "• • •";
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .code-block .code-content {
+      margin-top: 18px;
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .code-block .cmd {
+      color: #00d4aa;
+      font-weight: 600;
+    }
+    .code-block .arg {
+      color: #ffd166;
+    }
+    .code-block .val {
+      color: #f1f5f9;
+    }
+
+    .bot-reply {
+      background: linear-gradient(135deg, #e6fff7 0%, #f0f9ff 100%);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      color: var(--primary);
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .bot-reply::before {
+      content: "🤖";
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* ====== Step indicator ====== */
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .step-num .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    /* ====== Icon blocks ====== */
+    .icon-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 32px;
+      line-height: 1;
+    }
+    .icon-big {
+      font-size: 56px;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    /* ====== Chat bubbles ====== */
+    .chat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .bubble {
+      max-width: 88%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      line-height: 1.45;
+      box-shadow: var(--shadow-sm);
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #0088cc 0%, #00a8e0 100%);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.bot {
+      align-self: flex-start;
+      background: #fff;
+      color: var(--primary);
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.bot.alt {
+      background: linear-gradient(135deg, #e6fff7 0%, #f0f9ff 100%);
+      border-left: 3px solid var(--accent);
+    }
+    .bubble b { font-weight: 700; }
+    .bubble code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12.5px;
+      background: rgba(10, 37, 64, 0.08);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .bubble.user code {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+    }
+    @keyframes pop {
+      0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ====== Tip callout ====== */
+    .tip {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      border-left: 3px solid var(--highlight);
+      border-radius: 14px;
+      font-size: 14px;
+      color: var(--primary);
+      line-height: 1.5;
+    }
+    .tip .tip-icon {
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ====== Checklist items ====== */
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .check-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--primary);
+    }
+    .check-item .icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .check-item.warn .icon {
+      background: linear-gradient(135deg, #ffd166 0%, #ffb800 100%);
+    }
+    .check-item strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .check-item span.hint {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ====== Vehicles table ====== */
+    .vtable {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .vrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      gap: 10px;
+    }
+    .vrow .placa {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      background: #f0f4f8;
+      padding: 5px 9px;
+      border-radius: 8px;
+    }
+    .vrow .modelo {
+      flex: 1;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .vrow .filial {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .filial.centro { background: #e0f2fe; color: #0369a1; }
+    .filial.norte  { background: #dcfce7; color: #15803d; }
+    .filial.sul    { background: #fef3c7; color: #b45309; }
+
+    /* ====== Summary grid ====== */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .sum-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sum-item .ico {
+      font-size: 24px;
+      line-height: 1;
+    }
+    .sum-item .ttl {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.25;
+    }
+    .sum-item .desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ====== CTA ====== */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      background: #fff;
+      color: var(--primary);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+      width: fit-content;
+      transition: transform 0.2s;
+    }
+    .cta:active { transform: scale(0.97); }
+    .cta.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    /* ====== Progress bar (top) ====== */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(10, 37, 64, 0.08);
+      z-index: 50;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ====== Slide counter ====== */
+    .counter {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 40;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-sm);
+    }
+    .counter b {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* ====== Dots nav ====== */
+    .dots {
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 40;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(10, 37, 64, 0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      padding: 0;
+    }
+    .dot.active {
+      background: var(--accent);
+      width: 7px;
+      height: 22px;
+      border-radius: 4px;
+    }
+    .dot:hover { background: var(--primary); }
+
+    /* ====== Animations on view ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide.in-view .reveal { opacity: 1; transform: translateY(0); }
+    .slide.in-view .reveal:nth-child(1) { transition-delay: 0.05s; }
+    .slide.in-view .reveal:nth-child(2) { transition-delay: 0.15s; }
+    .slide.in-view .reveal:nth-child(3) { transition-delay: 0.25s; }
+    .slide.in-view .reveal:nth-child(4) { transition-delay: 0.35s; }
+    .slide.in-view .reveal:nth-child(5) { transition-delay: 0.45s; }
+    .slide.in-view .reveal:nth-child(6) { transition-delay: 0.55s; }
+    .slide.in-view .reveal:nth-child(7) { transition-delay: 0.65s; }
+    .slide.in-view .reveal:nth-child(8) { transition-delay: 0.75s; }
+
+    /* Hide UI on cover slide */
+    .slide-cover ~ .counter,
+    body.show-cover .counter { display: none; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Confetti for last slide */
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .confetti span {
+      position: absolute;
+      top: -10px;
+      width: 8px;
+      height: 14px;
+      opacity: 0.8;
+      animation: fall linear infinite;
+      border-radius: 2px;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ====== Back link ====== */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top progress bar -->
+  <div class="progress" aria-hidden="true">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Slide counter -->
+  <div class="counter" id="counter">
+    <b id="cur">01</b> / 10
+  </div>
+
+  <!-- Side dots nav -->
+  <nav class="dots" id="dots" aria-label="Navegação entre seções"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- ========== SLIDE 1 — Capa ========== -->
+    <section class="slide slide-cover" data-slide>
+      <div class="slide-inner">
+        <a class="back-link" href="index.html">← Voltar</a>
+        <span class="cover-tag"><span class="dot"></span>Guia rápido · Frota Sami</span>
+        <div class="reveal"><span class="cover-emoji">🚗💬</span></div>
+        <h1 class="reveal">Como usar o<br /><span style="color: var(--accent-2)">Bot da Frota</span><br />no Telegram</h1>
+        <p class="lead reveal" style="max-width: 360px;">
+          Em 10 telas rápidas, você aprende tudo o que precisa para testar e operar o bot no dia a dia.
+        </p>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">deslize</div>
+    </section>
+
+    <!-- ========== SLIDE 2 — Primeiros passos ========== -->
+    <section class="slide slide-telegram" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">1</span>Primeiro passo</div>
+        <h2 class="reveal">Ache o bot<br />no Telegram</h2>
+        <p class="lead reveal" style="max-width: 380px;">
+          Abra o Telegram, procure pelo usuário e mande um oi. Pronto, você já está conversando com ele.
+        </p>
+
+        <div class="reveal card" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #fff;">
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-2);">Usuário do bot</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.02em;">
+            @sami_frota_bot
+          </div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.7);">Disponível 24h · responde em segundos</div>
+        </div>
+
+        <div class="reveal chat">
+          <div class="bubble user" style="animation-delay: 0.5s">oi</div>
+          <div class="bubble bot" style="animation-delay: 0.9s">
+            <b>Oi! 👋</b> Sou o bot da Frota Sami. Manda o que aconteceu — abastecimento, manutenção, checklist — que eu registro pra você.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 3 — Registrar abastecimento ========== -->
+    <section class="slide slide-light" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">2</span>O que dá pra fazer</div>
+        <h2 class="reveal">Registrar um<br />abastecimento ⛽</h2>
+        <p class="lead reveal">Escreva do jeito que vier na cabeça. O bot entende.</p>
+
+        <div class="reveal code-block">
+          <span class="code-content"><span class="cmd">abasteci</span> <span class="arg">ABC1234</span> <span class="val">45L 295 reais km50000</span>
+<span class="cmd">abasteci</span> <span class="arg">ABC5678</span> <span class="val">38L duzentos e cinquenta e dois km61210</span></span>
+        </div>
+
+        <div class="reveal bot-reply">
+          <div><b style="color: #047857">✅ Registrado:</b> ABC1234, 45L, R$ 295,00, km 50.000</div>
+        </div>
+
+        <div class="reveal tip">
+          <span class="tip-icon">💡</span>
+          <div>Esqueceu a quilometragem? O bot <b>pergunta</b>. Se você não souber, ele usa a <b>última registrada</b>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 4 — Registrar manutenção ========== -->
+    <section class="slide slide-white" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">3</span>O que dá pra fazer</div>
+        <h2 class="reveal">Registrar uma<br />manutenção 🔧</h2>
+        <p class="lead reveal">Troca de óleo, pneus, revisão… basta descrever o que foi feito.</p>
+
+        <div class="reveal code-block">
+          <span class="code-content"><span class="cmd">troquei oleo</span> <span class="arg">ABC1234</span> <span class="val">km54000 180 reais</span>
+<span class="cmd">troca de pneus</span> <span class="arg">DEF1111</span> <span class="val">km90000, 1600 reais</span>
+<span class="cmd">fiz revisao</span> <span class="arg">ABC5678</span> <span class="val">450 reais km62000</span></span>
+        </div>
+
+        <div class="reveal bot-reply">
+          <div><b style="color: #047857">✅ Anotado:</b> troca de óleo · ABC1234 · km 54.000 · R$ 180,00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 5 — Checklist ========== -->
+    <section class="slide slide-accent" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">4</span>O que dá pra fazer</div>
+        <h2 class="reveal">Fazer o checklist<br />da filial ✅</h2>
+        <p class="lead reveal">Confirma o estado da frota em uma linha só.</p>
+
+        <div class="reveal code-block">
+          <span class="code-content"><span class="cmd">checklist</span> <span class="arg">Centro</span> <span class="val">ok</span>
+<span class="cmd">checklist</span> <span class="arg">Norte</span><span class="val">: tudo certo, so o pneu do </span><span class="arg">DEF1111</span>
+<span class="cmd">checklist</span> <span class="arg">Sul</span> <span class="val">ok</span></span>
+        </div>
+
+        <div class="reveal bot-reply">
+          <div><b style="color: #047857">✅ Checklist Norte registrado</b> · anotado: pneu do DEF1111 precisa de atenção</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 6 — Consultar dados ========== -->
+    <section class="slide slide-light" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">5</span>O que dá pra fazer</div>
+        <h2 class="reveal">Consultar<br />dados 📊</h2>
+        <p class="lead reveal">Pergunte em linguagem natural. O bot busca e responde na hora.</p>
+
+        <div class="reveal vtable">
+          <div class="vrow" style="align-items: center;">
+            <span class="placa" style="font-size: 12.5px; padding: 6px 10px;">resumo</span>
+            <span class="modelo" style="font-size: 13px;">do veículo: modelo, filial, km, histórico</span>
+          </div>
+          <div class="vrow" style="align-items: center;">
+            <span class="placa" style="font-size: 12.5px; padding: 6px 10px;">última troca</span>
+            <span class="modelo" style="font-size: 13px;">de óleo: quando, km, custo e quando trocar de novo</span>
+          </div>
+          <div class="vrow" style="align-items: center;">
+            <span class="placa" style="font-size: 12.5px; padding: 6px 10px;">gasto</span>
+            <span class="modelo" style="font-size: 13px;">da filial em combustível: total por período</span>
+          </div>
+          <div class="vrow" style="align-items: center;">
+            <span class="placa" style="font-size: 12.5px; padding: 6px 10px;">pendentes</span>
+            <span class="modelo" style="font-size: 13px;">filiais com checklist atrasado</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 7 — Se errar ========== -->
+    <section class="slide slide-white" data-slide>
+      <div class="slide-inner">
+        <div class="reveal step-num"><span class="num">6</span>Sem stress</div>
+        <h2 class="reveal">Se errar,<br />sem problema 🙂</h2>
+        <p class="lead reveal">O bot foi feito pra te ajudar — não pra te travar.</p>
+
+        <div class="reveal check-list">
+          <div class="check-item">
+            <span class="icon">?</span>
+            <div>
+              <strong>Esqueceu a placa?</strong>
+              <span class="hint">Ele pergunta antes de registrar.</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">↻</span>
+            <div>
+              <strong>Escreveu errado?</strong>
+              <span class="hint">Pode tentar de novo — sem julgamento.</span>
+            </div>
+          </div>
+          <div class="check-item warn">
+            <span class="icon">!</span>
+            <div>
+              <strong>Placa que não existe?</strong>
+              <span class="hint">Ele não inventa. Avisa que não achou no banco.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 8 — Veículos cadastrados ========== -->
+    <section class="slide slide-light" data-slide>
+      <div class="slide-inner">
+        <div class="reveal eyebrow">Pra testar</div>
+        <h2 class="reveal">Veículos<br />cadastrados 🚙</h2>
+        <p class="lead reveal">Esses são os 5 veículos fictícios disponíveis no banco de teste, separados por filial.</p>
+
+        <div class="reveal vtable">
+          <div class="vrow">
+            <span class="placa">ABC1234</span>
+            <span class="modelo">Fiat Strada 2022</span>
+            <span class="filial centro">Centro</span>
+          </div>
+          <div class="vrow">
+            <span class="placa">ABC5678</span>
+            <span class="modelo">VW Saveiro 2021</span>
+            <span class="filial centro">Centro</span>
+          </div>
+          <div class="vrow">
+            <span class="placa">DEF1111</span>
+            <span class="modelo">Renault Kangoo 2020</span>
+            <span class="filial norte">Norte</span>
+          </div>
+          <div class="vrow">
+            <span class="placa">DEF2222</span>
+            <span class="modelo">Fiat Fiorino 2023</span>
+            <span class="filial norte">Norte</span>
+          </div>
+          <div class="vrow">
+            <span class="placa">GHI3333</span>
+            <span class="modelo">Chevrolet Montana 2022</span>
+            <span class="filial sul">Sul</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 9 — Resumo ========== -->
+    <section class="slide slide-accent" data-slide>
+      <div class="slide-inner">
+        <div class="reveal eyebrow">TL;DR</div>
+        <h2 class="reveal">O que o bot<br />faz por você 🤖</h2>
+
+        <div class="reveal summary-grid">
+          <div class="sum-item">
+            <span class="ico">⛽</span>
+            <span class="ttl">Registra</span>
+            <span class="desc">abastecimento, manutenção e checklist</span>
+          </div>
+          <div class="sum-item">
+            <span class="ico">📊</span>
+            <span class="ttl">Responde</span>
+            <span class="desc">perguntas sobre veículos, gastos e histórico</span>
+          </div>
+          <div class="sum-item">
+            <span class="ico">⚠️</span>
+            <span class="ttl">Avisa</span>
+            <span class="desc">quando algum dado está incompleto</span>
+          </div>
+          <div class="sum-item">
+            <span class="ico">🛡️</span>
+            <span class="ttl">Não inventa</span>
+            <span class="desc">se não sabe, pergunta em vez de chutar</span>
+          </div>
+        </div>
+
+        <div class="reveal tip">
+          <span class="tip-icon">🕐</span>
+          <div>Bot funciona <b>24 horas, 7 dias</b> — pode testar a qualquer hora.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 10 — Final / CTA ========== -->
+    <section class="slide slide-final" data-slide>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="slide-inner">
+        <div class="reveal" style="font-size: 64px; line-height: 1; margin-bottom: 4px;">🎉</div>
+        <h2 class="reveal" style="color: #fff;">Tá pronto<br />pra testar!</h2>
+        <p class="lead reveal" style="max-width: 380px;">
+          Abre o Telegram, procura <b style="color: var(--accent-2)">@sami_frota_bot</b> e manda o primeiro comando.
+        </p>
+
+        <div class="reveal cta-group" style="margin-top: 8px;">
+          <a class="cta" href="https://t.me/sami_frota_bot" target="_blank" rel="noopener">
+            💬 Abrir o bot no Telegram
+          </a>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; margin-top: 4px;">
+            Dúvidas? Fala com o <b style="color: #fff">Danilo</b> — ele te ajuda.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      const deck = document.getElementById("deck");
+      const slides = Array.from(document.querySelectorAll("[data-slide]"));
+      const dotsBox = document.getElementById("dots");
+      const progressBar = document.getElementById("progressBar");
+      const counterCur = document.getElementById("cur");
+      const total = slides.length;
+
+      // Build dots
+      slides.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.className = "dot" + (i === 0 ? " active" : "");
+        b.setAttribute("aria-label", `Ir para slide ${i + 1}`);
+        b.addEventListener("click", () => {
+          slides[i].scrollIntoView({ behavior: "smooth" });
+        });
+        dotsBox.appendChild(b);
+      });
+      const dots = Array.from(dotsBox.children);
+
+      // Observe slides for in-view animation + active state
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.55) {
+              const idx = slides.indexOf(entry.target);
+              entry.target.classList.add("in-view");
+              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+              counterCur.textContent = String(idx + 1).padStart(2, "0");
+
+              // Confetti on the last slide
+              if (idx === total - 1) {
+                launchConfetti();
+              }
+            }
+          });
+        },
+        { root: deck, threshold: [0, 0.55, 1] }
+      );
+      slides.forEach((s) => io.observe(s));
+
+      // Progress bar
+      deck.addEventListener(
+        "scroll",
+        () => {
+          const max = deck.scrollHeight - deck.clientHeight;
+          const pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
+          progressBar.style.width = pct + "%";
+        },
+        { passive: true }
+      );
+
+      // Keyboard navigation (for desktop testing)
+      window.addEventListener("keydown", (e) => {
+        const cur = slides.findIndex(
+          (s) => Math.abs(s.getBoundingClientRect().top) < 5
+        );
+        if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
+          e.preventDefault();
+          if (cur < total - 1) slides[cur + 1].scrollIntoView({ behavior: "smooth" });
+        } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+          e.preventDefault();
+          if (cur > 0) slides[cur - 1].scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+      // Confetti helper
+      let confettiRunning = false;
+      function launchConfetti() {
+        if (confettiRunning) return;
+        confettiRunning = true;
+        const host = document.getElementById("confetti");
+        const colors = ["#00d4aa", "#0ea5e9", "#ffb800", "#ff6b6b", "#ffffff"];
+        for (let i = 0; i < 36; i++) {
+          const span = document.createElement("span");
+          span.style.left = Math.random() * 100 + "%";
+          span.style.background = colors[i % colors.length];
+          span.style.animationDuration = 2.5 + Math.random() * 2.5 + "s";
+          span.style.animationDelay = Math.random() * 0.8 + "s";
+          span.style.transform = `rotate(${Math.random() * 360}deg)`;
+          host.appendChild(span);
+        }
+        setTimeout(() => {
+          host.innerHTML = "";
+          confettiRunning = false;
+        }, 6000);
+      }
+    })();
+  </script>
+</body>
+</html>

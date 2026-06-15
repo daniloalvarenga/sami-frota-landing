@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0A2540" />
+  <meta name="description" content="Como usar o Bot da Frota Sami — todos os 14 itens do menu + conversa livre." />
+  <title>Como Usar · Bot da Frota Sami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --primary: #0a2540;
+      --primary-2: #0f3460;
+      --accent: #00b894;
+      --accent-2: #00d4aa;
+      --accent-3: #0ea5e9;
+      --highlight: #ffb800;
+      --danger: #ff6b6b;
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --text: #0a2540;
+      --text-muted: #5a6b7b;
+      --text-light: #8696a7;
+      --border: rgba(10, 37, 64, 0.08);
+      --shadow-sm: 0 2px 8px rgba(10, 37, 64, 0.06);
+      --shadow-md: 0 12px 32px rgba(10, 37, 64, 0.1);
+      --shadow-lg: 0 24px 60px rgba(10, 37, 64, 0.16);
+      --radius: 18px;
+      --radius-lg: 28px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      position: relative;
+    }
+
+    /* ====== Layout 9:16 ====== */
+    .deck {
+      height: 100vh;
+      width: 100vw;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .deck::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      min-height: 100vh;
+      min-height: 100dvh;
+      width: 100vw;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 22px 96px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ====== Backgrounds ====== */
+    .slide-light {
+      background: var(--bg);
+    }
+    .slide-white {
+      background: var(--bg-card);
+    }
+    .slide-cover {
+      background: linear-gradient(165deg, #0a2540 0%, #103a66 45%, #0f6e7a 100%);
+      color: #fff;
+    }
+    .slide-cover::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(0, 212, 170, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(14, 165, 233, 0.32) 0%, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(255, 184, 0, 0.18) 0%, transparent 50%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        transform: translate(3%, -3%) scale(1.05);
+      }
+    }
+    .slide-telegram {
+      background: linear-gradient(160deg, #0a2540 0%, #103a66 60%, #0088cc 110%);
+      color: #fff;
+    }
+    .slide-accent {
+      background: linear-gradient(160deg, #ffffff 0%, #e6fff7 100%);
+    }
+    .slide-green {
+      background: linear-gradient(160deg, #e6fff7 0%, #f0faf7 100%);
+    }
+    .slide-final {
+      background: linear-gradient(165deg, #0a2540 0%, #0f6e7a 100%);
+      color: #fff;
+    }
+    .slide-final::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(0, 212, 170, 0.28) 0%, transparent 50%),
+        radial-gradient(circle at 80% 90%, rgba(14, 165, 233, 0.25) 0%, transparent 50%);
+    }
+
+    /* ====== Typography ====== */
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slide-cover .eyebrow,
+    .slide-telegram .eyebrow,
+    .slide-final .eyebrow {
+      color: var(--accent-2);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 8.5vw, 48px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: clamp(28px, 7vw, 38px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    h3 {
+      font-size: clamp(20px, 5vw, 24px);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .slide-cover p,
+    .slide-telegram p,
+    .slide-final p {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .lead {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* ====== Cover ====== */
+    .cover-emoji {
+      font-size: 76px;
+      line-height: 1;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floaty 4s ease-in-out infinite;
+      filter: drop-shadow(0 8px 24px rgba(0, 212, 170, 0.35));
+    }
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    .cover-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      width: fit-content;
+    }
+    .cover-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00d4aa;
+      box-shadow: 0 0 12px #00d4aa;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .scroll-hint::after {
+      content: "";
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+      animation: scrollLine 1.6s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ====== Cards ====== */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card-quiet {
+      box-shadow: none;
+    }
+
+    .code-block {
+      background: #0a2540;
+      color: #e3f9f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .code-block::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 26px;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .code-block::after {
+      content: "• • •";
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .code-block .code-content {
+      margin-top: 18px;
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .code-block .cmd {
+      color: #00d4aa;
+      font-weight: 600;
+    }
+    .code-block .arg {
+      color: #ffd166;
+    }
+    .code-block .val {
+      color: #f1f5f9;
+    }
+
+    .bot-reply {
+      background: linear-gradient(135deg, #e6fff7 0%, #f0f9ff 100%);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      color: var(--primary);
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .bot-reply::before {
+      content: "🤖";
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* ====== Step indicator ====== */
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .step-num .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    /* ====== Icon blocks ====== */
+    .icon-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 32px;
+      line-height: 1;
+    }
+    .icon-big {
+      font-size: 56px;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    /* ====== Chat bubbles ====== */
+    .chat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .bubble {
+      max-width: 88%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      line-height: 1.45;
+      box-shadow: var(--shadow-sm);
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #0088cc 0%, #00a8e0 100%);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.bot {
+      align-self: flex-start;
+      background: #fff;
+      color: var(--primary);
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.bot.alt {
+      background: linear-gradient(135deg, #e6fff7 0%, #f0f9ff 100%);
+      border-left: 3px solid var(--accent);
+    }
+    .bubble b { font-weight: 700; }
+    .bubble code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12.5px;
+      background: rgba(10, 37, 64, 0.08);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .bubble.user code {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+    }
+    @keyframes pop {
+      0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ====== Tip callout ====== */
+    .tip {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      border-left: 3px solid var(--highlight);
+      border-radius: 14px;
+      font-size: 14px;
+      color: var(--primary);
+      line-height: 1.5;
+    }
+    .tip .tip-icon {
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ====== Checklist items ====== */
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .check-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--primary);
+    }
+    .check-item .icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .check-item.warn .icon {
+      background: linear-gradient(135deg, #ffd166 0%, #ffb800 100%);
+    }
+    .check-item strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .check-item span.hint {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ====== Summary grid ====== */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .sum-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sum-item .ico {
+      font-size: 24px;
+      line-height: 1;
+    }
+    .sum-item .ttl {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.25;
+    }
+    .sum-item .desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ====== CTA ====== */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      background: #fff;
+      color: var(--primary);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+      width: fit-content;
+      transition: transform 0.2s;
+    }
+    .cta:active { transform: scale(0.97); }
+    .cta.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    /* ====== Progress bar (top) ====== */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(10, 37, 64, 0.08);
+      z-index: 50;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ====== Slide counter ====== */
+    .counter {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 40;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-sm);
+    }
+    .counter b {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* ====== Dots nav ====== */
+    .dots {
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 40;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(10, 37, 64, 0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      padding: 0;
+    }
+    .dot.active {
+      background: var(--accent);
+      width: 7px;
+      height: 22px;
+      border-radius: 4px;
+    }
+    .dot:hover { background: var(--primary); }
+
+    /* ====== Animations on view ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide.in-view .reveal { opacity: 1; transform: translateY(0); }
+    .slide.in-view .reveal:nth-child(1) { transition-delay: 0.05s; }
+    .slide.in-view .reveal:nth-child(2) { transition-delay: 0.15s; }
+    .slide.in-view .reveal:nth-child(3) { transition-delay: 0.25s; }
+    .slide.in-view .reveal:nth-child(4) { transition-delay: 0.35s; }
+    .slide.in-view .reveal:nth-child(5) { transition-delay: 0.45s; }
+    .slide.in-view .reveal:nth-child(6) { transition-delay: 0.55s; }
+    .slide.in-view .reveal:nth-child(7) { transition-delay: 0.65s; }
+    .slide.in-view .reveal:nth-child(8) { transition-delay: 0.75s; }
+
+    /* Hide UI on cover slide */
+    .slide-cover ~ .counter,
+    body.show-cover .counter { display: none; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Confetti for last slide */
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .confetti span {
+      position: absolute;
+      top: -10px;
+      width: 8px;
+      height: 14px;
+      opacity: 0.8;
+      animation: fall linear infinite;
+      border-radius: 2px;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ====== Back link ====== */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #fff;
+    }
+
+    /* ====== Menu grid ====== */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .menu-group {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .menu-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .menu-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .menu-item .num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(0, 212, 170, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    /* ====== Category slides ====== */
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .cat-header .cat-icon {
+      font-size: 36px;
+      line-height: 1;
+    }
+    .cat-header .cat-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .cat-header .cat-range {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ====== Example pairs ====== */
+    .example-pair {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .example-pair .user-msg {
+      font-size: 13.5px;
+      color: var(--primary);
+      background: #e0f4ff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-style: italic;
+    }
+    .example-pair .bot-msg {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding-left: 8px;
+      border-left: 2px solid var(--accent);
+    }
+
+    /* ====== Tip grid ====== */
+    .tip-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tip-card {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--primary);
+      line-height: 1.5;
+    }
+    .tip-card .tip-icon {
+      font-size: 22px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top progress bar -->
+  <div class="progress" aria-hidden="true">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Slide counter -->
+  <div class="counter" id="counter">
+    <b id="cur">01</b> / 09
+  </div>
+
+  <!-- Side dots nav -->
+  <nav class="dots" id="dots" aria-label="Navegação entre seções"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- ========== SLIDE 1 — Cover ========== -->
+    <section class="slide slide-cover" data-slide>
+      <div class="slide-inner">
+        <a class="back-link" href="index.html">← Voltar</a>
+        <span class="cover-tag"><span class="dot"></span>Menu completo · Frota Sami</span>
+        <div class="reveal"><span class="cover-emoji">📋</span></div>
+        <h1 class="reveal">Como Usar o<br /><span style="color: var(--accent-2)">Sami Frota</span></h1>
+        <p class="lead reveal" style="max-width: 360px;">
+          Tudo que você pode fazer pelo Telegram — 14 opções de menu e conversa livre.
+        </p>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">deslize</div>
+    </section>
+
+    <!-- ========== SLIDE 2 — Menu overview ========== -->
+    <section class="slide slide-telegram" data-slide>
+      <div class="slide-inner">
+        <div class="reveal eyebrow">O menu completo</div>
+        <h2 class="reveal">14 opções +<br />conversa livre</h2>
+        <p class="lead reveal" style="max-width: 380px; color: rgba(255,255,255,0.78);">
+          O bot tem um menu estruturado e também entende mensagens livres.
+        </p>
+
+        <div class="reveal menu-grid">
+          <div class="menu-group">
+            <div class="menu-group-title">📋 Checklist</div>
+            <div class="menu-item"><span class="num">1</span> Fazer checklist</div>
+            <div class="menu-item"><span class="num">2</span> Checklists pendentes</div>
+            <div class="menu-item"><span class="num">3</span> Falhas abertas</div>
+            <div class="menu-item"><span class="num">4</span> Histórico de veículo</div>
+          </div>
+          <div class="menu-group">
+            <div class="menu-group-title">🔧 Registro</div>
+            <div class="menu-item"><span class="num">5</span> Registrar abastecimento</div>
+            <div class="menu-item"><span class="num">6</span> Registrar manutenção</div>
+            <div class="menu-item"><span class="num">7</span> Enviar foto de recibo</div>
+          </div>
+          <div class="menu-group">
+            <div class="menu-group-title">📊 Consulta</div>
+            <div class="menu-item"><span class="num">8</span> Resumo do veículo</div>
+            <div class="menu-item"><span class="num">9</span> Última troca de óleo</div>
+            <div class="menu-item"><span class="num">10</span> Gasto da filial</div>
+          </div>
+          <div class="menu-group">
+            <div class="menu-group-title">⚙️ Cadastro</div>
+            <div class="menu-item"><span class="num">11</span> Cadastrar veículo</div>
+            <div class="menu-item"><span class="num">12</span> Cadastrar filial</div>
+          </div>
+          <div class="menu-group">
+            <div class="menu-group-title">💬 Outros</div>
+            <div class="menu-item"><span class="num">13</span> Observação ou problema</div>
+            <div class="menu-item"><span class="num">14</span> Algo que não está no checklist</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 3 — Conversa Livre ========== -->
+    <section class="slide slide-white" data-slide>
+      <div class="slide-inner">
+        <div class="reveal eyebrow">💬 Conversa Livre</div>
+        <h2 class="reveal">Fale自然mente</h2>
+        <p class="lead reveal">O bot entende frases soltas — não precisa usar o menu. Mande o que precisar.</p>
+
+        <div class="reveal" style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="example-pair">
+            <div class="user-msg">"meu carro estragou"</div>
+            <div class="bot-msg">→ identifica a filial, lista veículos, registra o problema</div>
+          </div>
+          <div class="example-pair">
+            <div class="user-msg">"cadastrar ABC1234 Strada Norte"</div>
+            <div class="bot-msg">→ registra veículo direto na filial Norte</div>
+          </div>
+          <div class="example-pair">
+            <div class="user-msg">"quanto gastamos?"</div>
+            <div class="bot-msg">→ pergunta qual filial, depois calcula o total</div>
+          </div>
+          <div class="example-pair">
+            <div class="user-msg">"eu sou o Zequinha"</div>
+            <div class="bot-msg">→ identifica a filial pelo nome e se apresenta</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 4 — 📋 Checklist (1-4) ========== -->
+    <section class="slide slide-green" data-slide>
+      <div class="slide-inner">
+        <div class="reveal cat-header">
+          <span class="cat-icon">📋</span>
+          <div>
+            <div class="cat-title">Checklist</div>
+            <div class="cat-range">Opções 1–4</div>
+          </div>
+        </div>
+        <h2 class="reveal">Fazer e acompanhar<br />o checklist ✅</h2>
+
+        <div class="reveal check-list">
+          <div class="check-item">
+            <span class="icon">1</span>
+            <div>
+              <strong>Fazer checklist</strong>
+              <span class="hint">Registra o estado da filial: "checklist Norte ok" ou com observações</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">2</span>
+            <div>
+              <strong>Checklists pendentes</strong>
+              <span class="hint">Mostra filiais que não fizeram o checklist no dia</span>
+            </div>
+          </div>
+          <div class="check-item warn">
+            <span class="icon">3</span>
+            <div>
+              <strong>Falhas abertas</strong>
+              <span class="hint">Lista problemasreportados que ainda não foram resolvidos</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">4</span>
+            <div>
+              <strong>Histórico de veículo</strong>
+              <span class="hint">Mostra todos os registros de um veículo específico</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal chat" style="margin-top: 4px;">
+          <div class="bubble user" style="animation-delay: 0.3s">checklist Norte</div>
+          <div class="bubble bot" style="animation-delay: 0.6s">Checklist da filial Norte registrado! ✅<br/>Algo a reportar?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 5 — 🔧 Registro (5-7) ========== -->
+    <section class="slide slide-light" data-slide>
+      <div class="slide-inner">
+        <div class="reveal cat-header">
+          <span class="cat-icon">🔧</span>
+          <div>
+            <div class="cat-title">Registro</div>
+            <div class="cat-range">Opções 5–7</div>
+          </div>
+        </div>
+        <h2 class="reveal">Registrar abastecimento,<br />manutenção e foto 📷</h2>
+
+        <div class="reveal check-list">
+          <div class="check-item">
+            <span class="icon">5</span>
+            <div>
+              <strong>Registrar abastecimento</strong>
+              <span class="hint">Informe placa, litros e valor. Quilometragem é opcional (o bot pergunta se esquecer).</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">6</span>
+            <div>
+              <strong>Registrar manutenção</strong>
+              <span class="hint">Troca de óleo, pneus, revisão — descreva o que foi feito com placa e custo.</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">7</span>
+            <div>
+              <strong>Enviar foto de recibo</strong>
+              <span class="hint">Envie a foto de um recibo e o bot extrai os dados automaticamente.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal code-block" style="margin-top: 4px;">
+          <span class="code-content"><span class="cmd">abasteci</span> <span class="arg">ABC1234</span> <span class="val">45L 295 reais km50000</span>
+<span class="cmd">troquei oleo</span> <span class="arg">DEF1111</span> <span class="val">km90000 1600 reais</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 6 — 📊 Consulta + ⚙️ Cadastro (8-12) ========== -->
+    <section class="slide slide-white" data-slide>
+      <div class="slide-inner">
+        <div class="reveal cat-header">
+          <span class="cat-icon">📊</span>
+          <div>
+            <div class="cat-title">Consulta + Cadastro</div>
+            <div class="cat-range">Opções 8–12</div>
+          </div>
+        </div>
+        <h2 class="reveal">Consultar e<br />cadastrar dados 📦</h2>
+
+        <div class="reveal check-list">
+          <div class="check-item">
+            <span class="icon">8</span>
+            <div>
+              <strong>Resumo do veículo</strong>
+              <span class="hint">Modelo, filial, km atual, último abastecimento e manutenção.</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">9</span>
+            <div>
+              <strong>Última troca de óleo</strong>
+              <span class="hint">Quando foi, em que km, custo e quando fazer a próxima.</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">10</span>
+            <div>
+              <strong>Gasto da filial</strong>
+              <span class="hint">Total de combustível por período — semana, mês ou自定义.</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">11</span>
+            <div>
+              <strong>Cadastrar veículo</strong>
+              <span class="hint">Placa + modelo + filial. Ex: "cadastrar ABC1234 Strada Norte".</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="icon">12</span>
+            <div>
+              <strong>Cadastrar filial</strong>
+              <span class="hint">Nome da nova filial. Ex: "cadastrar filial Leste".</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 7 — 💬 Outros (13-14) ========== -->
+    <section class="slide slide-accent" data-slide>
+      <div class="slide-inner">
+        <div class="reveal cat-header">
+          <span class="cat-icon">💬</span>
+          <div>
+            <div class="cat-title">Outros</div>
+            <div class="cat-range">Opções 13–14</div>
+          </div>
+        </div>
+        <h2 class="reveal">Observações e<br />sugestões 📝</h2>
+
+        <div class="reveal check-list">
+          <div class="check-item">
+            <span class="icon">13</span>
+            <div>
+              <strong>Observação ou problema</strong>
+              <span class="hint">Reporta um problema com um veículo específico — pneu furado, luz acesa, barulho estranho. Fica registrado no histórico.</span>
+            </div>
+          </div>
+          <div class="check-item warn">
+            <span class="icon">14</span>
+            <div>
+              <strong>Algo que não está no checklist</strong>
+              <span class="hint">Se você identificou algo fora do checklist padrão, essa opção registra pra análise futura.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal tip" style="margin-top: 4px;">
+          <span class="tip-icon">💡</span>
+          <div>Também funciona por mensagem livre: <b>"o pneu do ABC1234 está gastado"</b> — o bot já registra direto.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 8 — Dicas ========== -->
+    <section class="slide slide-light" data-slide>
+      <div class="slide-inner">
+        <div class="reveal eyebrow">Dicas</div>
+        <h2 class="reveal">Truques pra<br />usar melhor 🤓</h2>
+
+        <div class="reveal tip-grid">
+          <div class="tip-card">
+            <span class="tip-icon">✍️</span>
+            <div><b>Texto simples</b> — sem pontuação especial. Escreva como numa mensagem pra um amigo.</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🔢</span>
+            <div><b>Placa primeiro</b> — na dúvida, coloque a placa no início: "ABC1234 abasteci 40L".</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">❓</span>
+            <div><b>Não sabe? Pergunte</b> — se esquecer algo, o bot pergunta antes de salvar.</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🕐</span>
+            <div><b>24/7</b> — funciona a qualquer hora, qualquer dia. Sem espera, sem atendimento humano.</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">📸</span>
+            <div><b>Fotos são válidas</b> — envie o recibo como foto que o bot extrai os dados.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 9 — Final CTA ========== -->
+    <section class="slide slide-final" data-slide>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="slide-inner">
+        <div class="reveal" style="font-size: 64px; line-height: 1; margin-bottom: 4px;">🚀</div>
+        <h2 class="reveal" style="color: #fff;">Abre o Telegram<br />e testa!</h2>
+        <p class="lead reveal" style="max-width: 380px;">
+          Tudos os 14 menus e a conversa livre estão disponíveis em <b style="color: var(--accent-2)">@sami_frota_bot</b>.
+        </p>
+
+        <div class="reveal cta-group" style="margin-top: 8px;">
+          <a class="cta" href="https://t.me/sami_frota_bot" target="_blank" rel="noopener">
+            💬 Abrir o bot no Telegram
+          </a>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; margin-top: 4px;">
+            Dúvidas? Fala com o <b style="color: #fff">Danilo</b> — ele te ajuda.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      const deck = document.getElementById("deck");
+      const slides = Array.from(document.querySelectorAll("[data-slide]"));
+      const dotsBox = document.getElementById("dots");
+      const progressBar = document.getElementById("progressBar");
+      const counterCur = document.getElementById("cur");
+      const total = slides.length;
+
+      // Build dots
+      slides.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.className = "dot" + (i === 0 ? " active" : "");
+        b.setAttribute("aria-label", `Ir para slide ${i + 1}`);
+        b.addEventListener("click", () => {
+          slides[i].scrollIntoView({ behavior: "smooth" });
+        });
+        dotsBox.appendChild(b);
+      });
+      const dots = Array.from(dotsBox.children);
+
+      // Observe slides for in-view animation + active state
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.55) {
+              const idx = slides.indexOf(entry.target);
+              entry.target.classList.add("in-view");
+              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+              counterCur.textContent = String(idx + 1).padStart(2, "0");
+
+              // Confetti on the last slide
+              if (idx === total - 1) {
+                launchConfetti();
+              }
+            }
+          });
+        },
+        { root: deck, threshold: [0, 0.55, 1] }
+      );
+      slides.forEach((s) => io.observe(s));
+
+      // Progress bar
+      deck.addEventListener(
+        "scroll",
+        () => {
+          const max = deck.scrollHeight - deck.clientHeight;
+          const pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
+          progressBar.style.width = pct + "%";
+        },
+        { passive: true }
+      );
+
+      // Keyboard navigation (for desktop testing)
+      window.addEventListener("keydown", (e) => {
+        const cur = slides.findIndex(
+          (s) => Math.abs(s.getBoundingClientRect().top) < 5
+        );
+        if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
+          e.preventDefault();
+          if (cur < total - 1) slides[cur + 1].scrollIntoView({ behavior: "smooth" });
+        } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+          e.preventDefault();
+          if (cur > 0) slides[cur - 1].scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+      // Confetti helper
+      let confettiRunning = false;
+      function launchConfetti() {
+        if (confettiRunning) return;
+        confettiRunning = true;
+        const host = document.getElementById("confetti");
+        const colors = ["#00d4aa", "#0ea5e9", "#ffb800", "#ff6b6b", "#ffffff"];
+        for (let i = 0; i < 36; i++) {
+          const span = document.createElement("span");
+          span.style.left = Math.random() * 100 + "%";
+          span.style.background = colors[i % colors.length];
+          span.style.animationDuration = 2.5 + Math.random() * 2.5 + "s";
+          span.style.animationDelay = Math.random() * 0.8 + "s";
+          span.style.transform = `rotate(${Math.random() * 360}deg)`;
+          host.appendChild(span);
+        }
+        setTimeout(() => {
+          host.innerHTML = "";
+          confettiRunning = false;
+        }, 6000);
+      }
+    })();
+  </script>
+</body>
+</html>
